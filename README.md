@@ -1,8 +1,15 @@
-This is an inoffical 1:1 clone of the offical socialshareprivay code from:
+This is an inoffical clone of the socialshareprivay code from:
 
 http://www.heise.de/extras/socialshareprivacy/
 
 I think publishing code without any version control is silly, therefore i try to keep this repo updated with their changes.
+
+# Changes (from original)
+
+* now compatible with jquery 1.9, but dropping support for anything below 1.7 (by @DoHahn)
+
+
+# License
 
 All copyrights lie with the heise developers:
 
