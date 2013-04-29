@@ -17,7 +17,7 @@
 
 	/*
 	 * helper functions
-	 */ 
+	 */
 
     // abbreviate at last blank before length and add "\u2026" (horizontal ellipsis)
     function abbreviateText(text, length) {
@@ -37,7 +37,7 @@
         var metaContent = $('meta[name="' + name + '"]').attr('content');
         return metaContent || '';
     }
-    
+
     // create tweet text from content of <meta name="DC.title"> and <meta name="DC.creator">
     // fallback to content of <title> tag
     function getTweetText() {
@@ -94,16 +94,16 @@
                     'referrer_track'    : '',
                     'language'          : 'de_DE',
                     'action'            : 'recommend'
-                }, 
+                },
                 'twitter' : {
-                    'status'            : 'on', 
+                    'status'            : 'on',
                     'dummy_img'         : 'socialshareprivacy/images/dummy_twitter.png',
                     'txt_info'          : '2 Klicks f&uuml;r mehr Datenschutz: Erst wenn Sie hier klicken, wird der Button aktiv und Sie k&ouml;nnen Ihre Empfehlung an Twitter senden. Schon beim Aktivieren werden Daten an Dritte &uuml;bertragen &ndash; siehe <em>i</em>.',
                     'txt_twitter_off'   : 'nicht mit Twitter verbunden',
                     'txt_twitter_on'    : 'mit Twitter verbunden',
                     'perma_option'      : 'on',
                     'display_name'      : 'Twitter',
-                    'referrer_track'    : '', 
+                    'referrer_track'    : '',
                     'tweet_text'        : getTweetText,
                     'language'          : 'en'
                 },
@@ -174,7 +174,7 @@
 
                 var $container_fb = $('li.facebook', context);
 
-                $('li.facebook div.fb_like img.fb_like_privacy_dummy,li.facebook span.switch', context).live('click', function () {
+                $('li.facebook div.fb_like img.fb_like_privacy_dummy,li.facebook span.switch', context).on('click', function () {
                     if ($container_fb.find('span.switch').hasClass('off')) {
                         $container_fb.addClass('info_off');
                         $container_fb.find('span.switch').addClass('on').removeClass('off').html(options.services.facebook.txt_fb_on);
@@ -207,7 +207,7 @@
 
                 var $container_tw = $('li.twitter', context);
 
-                $('li.twitter div.tweet img,li.twitter span.switch', context).live('click', function () {
+                $('li.twitter div.tweet img,li.twitter span.switch', context).on('click', function () {
                     if ($container_tw.find('span.switch').hasClass('off')) {
                         $container_tw.addClass('info_off');
                         $container_tw.find('span.switch').addClass('on').removeClass('off').html(options.services.twitter.txt_twitter_on);
@@ -226,7 +226,7 @@
             if (gplus_on) {
                 // fuer G+ wird die URL nicht encoded, da das zu einem Fehler fuehrt
                 var gplus_uri = uri + options.services.gplus.referrer_track;
-                
+
                 // we use the Google+ "asynchronous" code, standard code is flaky if inserted into dom after load
                 var gplus_code = '<div class="g-plusone" data-size="medium" data-href="' + gplus_uri + '"></div><script type="text/javascript">window.___gcfg = {lang: "' + options.services.gplus.language + '"}; (function() { var po = document.createElement("script"); po.type = "text/javascript"; po.async = true; po.src = "https://apis.google.com/js/plusone.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(po, s); })(); </script>';
                 var gplus_dummy_btn = '<img src="' + options.services.gplus.dummy_img + '" alt="&quot;Google+1&quot;-Dummy" class="gplus_one_dummy" />';
@@ -235,7 +235,7 @@
 
                 var $container_gplus = $('li.gplus', context);
 
-                $('li.gplus div.gplusone img,li.gplus span.switch', context).live('click', function () {
+                $('li.gplus div.gplusone img,li.gplus span.switch', context).on('click', function () {
                     if ($container_gplus.find('span.switch').hasClass('off')) {
                         $container_gplus.addClass('info_off');
                         $container_gplus.find('span.switch').addClass('on').removeClass('off').html(options.services.gplus.txt_gplus_on);
@@ -254,12 +254,12 @@
             context.append('<li class="settings_info"><div class="settings_info_menu off perma_option_off"><a href="' + options.info_link + '"><span class="help_info icon"><span class="info">' + options.txt_help + '</span></span></a></div></li>');
 
             // Info-Overlays mit leichter Verzoegerung einblenden
-            $('.help_info:not(.info_off)', context).live('mouseenter', function () {
+            $('.help_info:not(.info_off)', context).on('mouseenter', function () {
                 var $info_wrapper = $(this);
                 var timeout_id = window.setTimeout(function () { $($info_wrapper).addClass('display'); }, 500);
                 $(this).data('timeout_id', timeout_id);
             });
-            $('.help_info', context).live('mouseleave', function () {
+            $('.help_info', context).on('mouseleave', function () {
                 var timeout_id = $(this).data('timeout_id');
                 window.clearTimeout(timeout_id);
                 if ($(this).hasClass('display')) {
@@ -270,13 +270,14 @@
             var facebook_perma = (options.services.facebook.perma_option === 'on');
             var twitter_perma  = (options.services.twitter.perma_option  === 'on');
             var gplus_perma    = (options.services.gplus.perma_option    === 'on');
+            var canUseJSON     = (typeof JSON === 'object' && typeof JSON.parse === 'function');
 
             // Menue zum dauerhaften Einblenden der aktiven Dienste via Cookie einbinden
-            // Die IE7 wird hier ausgenommen, da er kein JSON kann und die Cookies hier ueber JSON-Struktur abgebildet werden
+            // Browser die kein JSON koennen werden hier ausgenommen da die Cookies hier ueber JSON-Struktur abgebildet werden
             if (((facebook_on && facebook_perma)
                 || (twitter_on && twitter_perma)
                 || (gplus_on && gplus_perma))
-                    && (!$.browser.msie || ($.browser.msie && $.browser.version > 7.0))) {
+                    && canUseJSON) {
 
                 // Cookies abrufen
                 var cookie_list = document.cookie.split(';');
@@ -335,18 +336,18 @@
                 $container_settings_info.find('span.settings').css('cursor', 'pointer');
 
                 // Einstellungs-Menue bei mouseover ein-/ausblenden
-                $($container_settings_info.find('span.settings'), context).live('mouseenter', function () {
+                $($container_settings_info.find('span.settings'), context).on('mouseenter', function () {
                     var timeout_id = window.setTimeout(function () { $container_settings_info.find('.settings_info_menu').removeClass('off').addClass('on'); }, 500);
                     $(this).data('timeout_id', timeout_id);
-                }); 
-                $($container_settings_info, context).live('mouseleave', function () {
+                });
+                $($container_settings_info, context).on('mouseleave', function () {
                     var timeout_id = $(this).data('timeout_id');
                     window.clearTimeout(timeout_id);
                     $container_settings_info.find('.settings_info_menu').removeClass('on').addClass('off');
                 });
 
                 // Klick-Interaktion auf <input> um Dienste dauerhaft ein- oder auszuschalten (Cookie wird gesetzt oder geloescht)
-                $($container_settings_info.find('fieldset input')).live('click', function (event) {
+                $($container_settings_info.find('fieldset input')).on('click', function (event) {
                     var click = event.target.id;
                     var service = click.substr(click.lastIndexOf('_') + 1, click.length);
                     var cookie_name = 'socialSharePrivacy_' + service;
