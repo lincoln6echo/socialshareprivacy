@@ -1,3 +1,9 @@
+## DEPRECATED
+
+This version is broken in current jquery versions, please see patrickheck's repo for a maintained version!
+
+https://github.com/patrickheck/socialshareprivacy
+
 ## SocialSharePrivacy
 
 This is an inoffical clone of the socialshareprivacy code from:
